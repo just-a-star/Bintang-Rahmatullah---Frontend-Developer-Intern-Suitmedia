@@ -1,4 +1,4 @@
-# Link Deployment: [https://bintang-rahmatullah-suitmedia.netlify.app/](https://bintang-rahmatullah-suitmedia.netlify.app/)
+# Link Deployment: [https://bintang-rahmatullah-suitmedia.netlify.app/#Ideas](https://bintang-rahmatullah-suitmedia.netlify.app/#Ideas)
 
 # Getting Started with Create React App
 
