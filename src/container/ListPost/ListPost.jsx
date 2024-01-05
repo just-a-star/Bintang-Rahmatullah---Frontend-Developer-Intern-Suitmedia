@@ -2,13 +2,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./ListPost.scss";
 import { FaAngleLeft, FaAnglesLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6"; // icons utk pagination
-
+import dayjs from "dayjs";
+import "dayjs/locale/id";
 const ListPost = () => {
   const [posts, setPosts] = useState([]);
   const [totalPosts, setTotalPosts] = useState(0);
   const [sortOrder, setSortOrder] = useState(localStorage.getItem("sortOrder") || "-published_at");
-  const [itemsPerPage, setItemsPerPage] = useState(localStorage.getItem("itemsPerPage") || 10);
-  const [currentPage, setCurrentPage] = useState(localStorage.getItem("currentPage") || 1);
+  const [itemsPerPage, setItemsPerPage] = useState(parseInt(localStorage.getItem("itemsPerPage"), 10) || 10);
+  const [currentPage, setCurrentPage] = useState(parseInt(localStorage.getItem("currentPage"), 10) || 1);
 
   const fetchPosts = useCallback(async () => {
     const apiUrl = "https://suitmedia-backend.suitdev.com/api/ideas";
@@ -46,6 +47,8 @@ const ListPost = () => {
   }, [currentPage, itemsPerPage, sortOrder]);
 
   useEffect(() => {
+
+    
     fetchPosts();
   }, [fetchPosts]);
 
@@ -107,19 +110,23 @@ const ListPost = () => {
     return pages;
   };
   const totalPages = Math.ceil(totalPosts / itemsPerPage);
-  const paginationButtons = Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-    <button key={pageNumber} disabled={pageNumber === parseInt(currentPage)} onClick={() => goToPage(pageNumber)}>
-      {pageNumber}
-    </button>
-  ));
 
   const startIndex = (currentPage - 1) * itemsPerPage + 1;
   const endIndex = Math.min(startIndex + itemsPerPage - 1, totalPosts);
 
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      console.log("timer finished!");
+    }, 10);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <div className="app__listPost-wrapper">
       <div className="app__listPost-filter">
-      <div className="app__listPost-showing">
+        <div className="app__listPost-showing">
           Showing {startIndex} - {endIndex} of {totalPosts}
         </div>
         <div className="app_list-filterShowPage">
@@ -145,7 +152,8 @@ const ListPost = () => {
             {/* Check if medium_image array is not empty and then access its first element */}
             {post.medium_image && post.medium_image.length > 0 && <img src={post.medium_image[0].url} alt={post.title} loading="lazy" />}
             <div className="post-info">
-              <p className="post-publishedAt">{new Date(post.published_at).toLocaleDateString()}</p>
+              <p className="post-publishedAt">{dayjs(post.published_at).locale("id").format("D MMMM YYYY")} </p>
+              {/* <p className="post-publishedAt">{new Date(post.published_at).toLocaleDateString()}</p> */}
               <h3 className="post-title">{post.title}</h3>
             </div>
           </div>
